@@ -27,6 +27,17 @@ router.post(
     validate.validation,
     AuthController.register
 );
+router.post(
+    "/isActive",
+    body("userID").custom(async (value) => {
+        return await User.findOne({ id: value }).then((user) => {
+            if (!user) {
+                return Promise.reject(`Vui lòng đăng ký tài khoản`);
+            }
+        });
+    }),
+    AuthController.isActive
+);
 router.post("/login", AuthController.login);
 router.post("/login-google", AuthController.loginGoogle);
 router.post("/login-facebook", AuthController.loginFacebook);

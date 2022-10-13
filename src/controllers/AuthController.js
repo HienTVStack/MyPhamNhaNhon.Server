@@ -15,11 +15,6 @@ exports.register = async (req, res) => {
         );
 
         const user = await User.create(req.body);
-        const token = jsonwebtoken.sign(
-            { id: user._id },
-            process.env.TOKEN_SELECT_KEY,
-            { expiresIn: "24h" }
-        );
 
         let transport = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
@@ -33,24 +28,16 @@ exports.register = async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: req.body.email,
             subject: `${process.env.NAME_SHOP} - XÁC NHẬN ĐĂNG KÝ TÀI KHOẢN `,
-            html: htmlVerifyEmail(
-                req.body.fullName,
-                `${process.env.HOSTING}/?login=${token}`
-            ),
+            html: htmlVerifyEmail(req.body.fullName, user.codeConfirm),
         };
 
         transport.sendMail(mailOptions, (err, info) => {
             if (err) {
-                // return res
-                //     .status(500)
-                //     .json({ message: `Error send email`, errors: err });
                 console.log(`Don't send email to ${req.body.fullName}`);
-            } else {
-                console.log(info);
             }
         });
 
-        res.status(201).json({ user, token });
+        res.status(201).json({ user });
     } catch (error) {
         console.log(error);
         res.status(401).json({ message: error });
@@ -168,6 +155,36 @@ exports.loginFacebook = async (req, res) => {
         }
     } catch (error) {
         console.log({ error: error });
+        res.status(500).json(error);
+    }
+};
+
+exports.isActive = async (req, res) => {
+    try {
+        const { codeConfirmEmail } = req.body;
+
+        const user = await User.findOne({
+            codeConfirm: codeConfirmEmail,
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                errors: [
+                    {
+                        param: "codeConfirmEmail",
+                        msg: "Mã xác nhận không chính xác",
+                    },
+                ],
+            });
+        }
+
+        const token = jsonwebtoken.sign(
+            { id: user.id },
+            process.env.TOKEN_SELECT_KEY,
+            { expiresIn: "24h" }
+        );
+        res.status(200).json({ user, token });
+    } catch (error) {
         res.status(500).json(error);
     }
 };

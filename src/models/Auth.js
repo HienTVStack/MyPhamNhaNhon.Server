@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
         status: { type: Boolean, default: false },
         googleId: { type: String },
         facebookId: { type: String },
+        codeConfirm: { type: Number },
     },
     schemaOptions
 );

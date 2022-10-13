@@ -1,4 +1,4 @@
-exports.htmlVerifyEmail = (name, linApi) => {
+exports.htmlVerifyEmail = (name, code) => {
     return ` <html>
     <head>
         <meta charset="UTF-8">
@@ -9,7 +9,7 @@ exports.htmlVerifyEmail = (name, linApi) => {
     </head>
     <body style=" font-family: Arial, Helvetica, sans-serif;color: #212529;">
         <header class="container-fluid" style="background-color: #F0BD71; text-align: center;">
-            <h2>TIỆM MỸ PHẨM NHÀ NHƠN</h2>
+            <h2 style="padding: 20px">TIỆM MỸ PHẨM NHÀ NHƠN</h2>
         </header>
         <main style="color: #212529;">
             <br />
@@ -20,15 +20,13 @@ exports.htmlVerifyEmail = (name, linApi) => {
                 <br>
                 <div style="color: #212529;width: 600px; margin: auto; text-align: justify; font-size: 16px;">
                     Xin chào: <p style="display: inline; font-weight: bold">${name}</p> <br><br>
-                    Anh/Chị đã đăng ký tài khoản thành công. Vui lòng nhấn nút <p style="display: inline; font-weight: bold;">"Xác nhận"</p> để được kích hoạt tài khoản. <br> <br>
+                    Anh/Chị đã đăng ký tài khoản thành công. Vui lòng nhập mã code <p style="display: inline; font-weight: bold;">"${code}"</p> để được kích hoạt tài khoản. <br> <br>
                     Nếu Anh/Chị có thắc mắc hãy liên hệ ngay Hotline (+84) 33 712 2712 để được hỗ trợ nhanh nhất. <br><br>
                     Thân mến, chúc Anh/Chị một ngày tốt lành <br>
                     <p style="display: inline; font-weight: bold;">Mỹ phẩm nhà Nhơn</p>
                     <hr style="margin-top: 30px;margin-bottom: 40px;"/>
                 </div>
-                <div  style="text-align: center;margin-top: 20px;margin-bottom: 20px;">
-                    <a style="border-radius: 5px;font-weight: 600;padding: 18px;background-color: #F0BD71;font-size:18px;color: #fff;text-decoration: none;cursor: pointer;" href="${linApi}">Xác nhận</a>
-                </div>
+              
             </div>
         </main>
         <div class="container-fluid" style="background-color: #F5F5F5; text-align: center;padding:20px">
@@ -44,3 +42,7 @@ exports.htmlVerifyEmail = (name, linApi) => {
     </html>
    `;
 };
+
+// <div  style="text-align: center;margin-top: 20px;margin-bottom: 20px;">
+//     <a style="border-radius: 5px;font-weight: 600;padding: 18px;background-color: #F0BD71;font-size:18px;color: #fff;text-decoration: none;cursor: pointer;" href="${linApi}">Xác nhận</a>
+// </div>
