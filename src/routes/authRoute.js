@@ -24,6 +24,13 @@ router.post(
             }
         });
     }),
+    body("email").custom(async (value) => {
+        return await User.findOne({ email: value }).then((user) => {
+            if (user) {
+                return Promise.reject(`E-mail này đã được sử dụng`);
+            }
+        });
+    }),
     validate.validation,
     AuthController.register
 );
@@ -44,4 +51,16 @@ router.post("/login-facebook", AuthController.loginFacebook);
 router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
     res.status(200).json({ user: req.user });
 });
+router.post(
+    "/forgot-password",
+    body("email").isEmail().withMessage("Vui lòng nhập email chính xác"),
+    AuthController.forgotPassword
+);
+router.post(
+    "/update-password",
+    body("password")
+        .isLength({ min: 8 })
+        .withMessage(`Mật khẩu ít nhất là 8 kí tự`),
+    AuthController.updatePassword
+);
 module.exports = router;

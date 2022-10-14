@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema(
         password: { type: String },
         fullName: { type: String },
         email: { type: String },
+        emailGoogle: { type: String },
+        emailFacebook: { type: String },
         phoneNumber: { type: String, default: undefined },
         status: { type: Boolean, default: false },
         googleId: { type: String },

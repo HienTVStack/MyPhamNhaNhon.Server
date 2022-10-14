@@ -1,9 +1,9 @@
 const CryptoJS = require("crypto-js");
 const jsonwebtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const handleSendEmail = require("../handlers/handleSendEmail");
 const User = require("../models/Auth");
 const { htmlVerifyEmail } = require("../html/verifyEmail");
+const { htmlForgotPassword } = require("../html/forgotPassword");
 
 exports.register = async (req, res) => {
     const { password } = req.body;
@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
         );
 
         const user = await User.create(req.body);
-
+        //Handle send email
         let transport = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
@@ -107,7 +107,7 @@ exports.loginGoogle = async (req, res) => {
         } else {
             const userRegister = await User.create({
                 username: id,
-                email,
+                emailGoogle: email,
                 fullName: name,
                 googleId: id,
                 status: true,
@@ -142,7 +142,7 @@ exports.loginFacebook = async (req, res) => {
             const userRegister = await User.create({
                 username: id,
                 fullName: name,
-                email,
+                emailFacebook: email,
                 facebookId: id,
                 status: true,
             });
@@ -177,7 +177,8 @@ exports.isActive = async (req, res) => {
                 ],
             });
         }
-
+        user.status = true;
+        await user.save();
         const token = jsonwebtoken.sign(
             { id: user.id },
             process.env.TOKEN_SELECT_KEY,
@@ -186,5 +187,70 @@ exports.isActive = async (req, res) => {
         res.status(200).json({ user, token });
     } catch (error) {
         res.status(500).json(error);
+    }
+};
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({
+                errors: [
+                    {
+                        param: "email",
+                        msg: "E-mail không chính xác",
+                    },
+                ],
+            });
+        }
+        //Handle send email
+        let transport = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT,
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        });
+        const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: req.body.email,
+            subject: `${process.env.NAME_SHOP} - THAY ĐỔI MẬT KHẨU `,
+            html: htmlForgotPassword(
+                user.fullName,
+                `${process.env.HOSTING}/thay-doi-mat-khau?username=${user.username}&email=${user.email}`
+            ),
+        };
+        transport.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.log(`Don't send email to ${user.fullName}`);
+            }
+        });
+        res.status(200).json({ user });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json(error);
+    }
+};
+
+exports.updatePassword = async (req, res) => {
+    const { password, email } = req.body;
+    console.log(req.body);
+    try {
+        const cryptPassword = CryptoJS.AES.encrypt(
+            password,
+            process.env.PASSWORD_SECRET_KEY
+        );
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { password: cryptPassword.toString() },
+            { new: true }
+        );
+
+        res.status(200).json({ user });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json(error);
     }
 };

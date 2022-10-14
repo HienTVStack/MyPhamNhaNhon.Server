@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
+const slug = require("mongoose-slug-generator");
 const modelOption = require("./modelOption");
-const Schema = new mongoose.Schema();
 
 mongoose.plugin(slug);
 
-const categorySchema = Schema(
+const categorySchema = new mongoose.Schema(
     {
-        name: { type: String },
+        name: { type: String, unique: true },
         slug: { type: String, unique: true, slug: "name" },
     },
     modelOption

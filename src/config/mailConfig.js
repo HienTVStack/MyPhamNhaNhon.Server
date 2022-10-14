@@ -1,12 +1,10 @@
-const nodemailer = require("nodemailer");
-const { htmlVerifyEmail } = require("../html/verifyEmail");
-
 const mailConfig = {
-    host: 123,
-    port: 123,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
     },
 };
+
 module.exports = mailConfig;
