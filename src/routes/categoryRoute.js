@@ -8,7 +8,7 @@ router.get("/get-all", CategoryController.getAllCategory);
 router.post(
     "/create",
     body("name").custom(async (value) => {
-        return await Category.findOne({ name: name }).then((category) => {
+        return await Category.findOne({ name: value }).then((category) => {
             if (category) {
                 Promise.reject(`Tên danh mục đã tồn tại`);
             }
@@ -16,5 +16,7 @@ router.post(
     }),
     CategoryController.createCategory
 );
+router.get("/getBySlug", CategoryController.getCategoryBySlug);
+router.post("/update", CategoryController.updateCategory);
 
 module.exports = router;

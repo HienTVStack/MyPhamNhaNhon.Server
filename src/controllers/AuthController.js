@@ -194,6 +194,16 @@ exports.forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email: email });
+
+        const today = new Date();
+        const date =
+            today.getMonth() +
+            1 +
+            "-" +
+            today.getDate() +
+            "-" +
+            today.getFullYear();
+
         if (!user) {
             return res.status(404).json({
                 errors: [
@@ -219,7 +229,7 @@ exports.forgotPassword = async (req, res) => {
             subject: `${process.env.NAME_SHOP} - THAY ĐỔI MẬT KHẨU `,
             html: htmlForgotPassword(
                 user.fullName,
-                `${process.env.HOSTING}/thay-doi-mat-khau?username=${user.username}&email=${user.email}`
+                `${process.env.HOSTING}/thay-doi-mat-khau?username=${user.username}&email=${user.email}&date=${date}`
             ),
         };
         transport.sendMail(mailOptions, (err, info) => {
