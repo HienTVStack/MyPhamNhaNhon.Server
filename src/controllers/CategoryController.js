@@ -5,7 +5,7 @@ exports.getAllCategory = async (req, res) => {
         const categories = await Category.find();
 
         res.status(200).json({
-            message: "GET ALL SUCCESS",
+            message: "OK",
             categories: categories,
         });
     } catch (error) {

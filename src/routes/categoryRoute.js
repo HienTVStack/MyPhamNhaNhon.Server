@@ -4,7 +4,7 @@ const router = express.Router();
 const CategoryController = require("../controllers/CategoryController");
 const Category = require("../models/Category");
 
-router.get("/get-all", CategoryController.getAllCategory);
+router.get("/getAll", CategoryController.getAllCategory);
 router.post(
     "/create",
     body("name").custom(async (value) => {

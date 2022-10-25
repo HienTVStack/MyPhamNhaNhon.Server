@@ -40,8 +40,29 @@ exports.getAll = async (req, res) => {
     try {
         const products = await Product.find();
 
-        res.status(200).json({ products });
+        res.status(200).json({ message: "OK", products: products });
     } catch (error) {
         res.status(404).json(error);
+    }
+};
+
+exports.getById = async (req, res) => {
+    try {
+        console.log(req.params);
+
+        // res.status(200)
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", error });
+    }
+};
+
+exports.getBySlug = async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const product = await Product.findOne({ slug: slug });
+
+        res.status(200).json({ message: "OK", product: product });
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", error });
     }
 };
