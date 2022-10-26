@@ -2,12 +2,13 @@
   "name": "myphamnhanhon-server",
   "version": "0.0.0",
   "private": true,
+  "main": "app.js",
   "engines": {
     "node": "16.x"
   },
   "scripts": {
-    "start": "nodemon ./bin/www",
-    "vercel-build": "nodemon ./bin/www"
+    "start": "nodemon ./app.js",
+    "vercel-build": "node ./app.js"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
