@@ -2,12 +2,10 @@
     "version": 2,
     "name": "myphamnhanhon-server",
     "builds": [
-        { "src": "./bin/www", "use": "@vercel/node", "config":{
-            "build": true
-        } }
+        { "src": "./bin/www", "use": "@vercel/node" }
      ],
      "routes": [
-        { "src": "/(.*)", "dest": "/" }
+        { "src": "/(.*)", "dest": "/bin/www" }
      ]
 
 }
