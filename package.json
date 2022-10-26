@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "nodemon ./bin/www",
-    "vercel-build": "node ./bin/www"
+    "vercel-build": "nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
