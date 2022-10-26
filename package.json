@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "vercel-build": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
