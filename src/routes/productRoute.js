@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.get("/getAll", ProductController.getAll);
 router.post("/create", ProductController.create);
-// router.get("/:id/detail", ProductController.getById);
 router.get("/:slug/detail", ProductController.getBySlug);
+router.put("/update", ProductController.update);
+router.put("/updateImage", ProductController.updateImage);
 
 module.exports = router;

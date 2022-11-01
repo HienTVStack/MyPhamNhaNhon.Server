@@ -10,6 +10,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
 const app = express();
+app.disable("etag");
 const server = http.createServer(app);
 
 dotenv.config();

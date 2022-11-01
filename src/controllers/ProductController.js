@@ -66,3 +66,41 @@ exports.getBySlug = async (req, res) => {
         res.status(404).json({ message: "FAIL", error });
     }
 };
+
+exports.update = async (req, res) => {
+    console.log(req.body);
+    try {
+        const product = await Product.updateOne(
+            { slug: req.body.slug },
+            req.body
+        );
+
+        console.log(product);
+        if (product) {
+            res.status(200).json({ message: "OK", product });
+        }
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", error });
+    }
+};
+
+exports.updateImage = async (req, res, next) => {
+    const { slug, imageList } = req.body;
+    try {
+        const productUpdate = await Product.findOneAndUpdate(
+            { slug },
+            { imageList }
+        );
+        const product = await Product.findOne({ slug });
+
+        Promise.all([productUpdate, product])
+            .then(([pr, product]) => {
+                res.status(200).json({ message: "OK", product: product });
+            })
+            .catch((err) => {
+                res.status(404).json({ message: "FAIL", err });
+            });
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", error });
+    }
+};

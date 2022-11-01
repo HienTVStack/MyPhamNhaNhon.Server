@@ -29,6 +29,10 @@ const ProductSchema = new mongoose.Schema(
                 ref: "Tag",
             },
         ],
+        author: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Auth",
+        },
     },
     schemaOptions
 );
