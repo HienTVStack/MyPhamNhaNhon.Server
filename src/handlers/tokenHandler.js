@@ -7,10 +7,7 @@ const tokenDecode = (req) => {
     if (bearerHeader) {
         const bearer = bearerHeader.split(" ")[1];
         try {
-            const tokenDecoded = jsonwebtoken.verify(
-                bearer,
-                process.env.TOKEN_SELECT_KEY
-            );
+            const tokenDecoded = jsonwebtoken.verify(bearer, process.env.TOKEN_SELECT_KEY);
             return tokenDecoded;
         } catch {
             return false;

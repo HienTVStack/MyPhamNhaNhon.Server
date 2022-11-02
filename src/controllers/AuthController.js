@@ -9,10 +9,7 @@ exports.register = async (req, res) => {
     const { password } = req.body;
 
     try {
-        req.body.password = CryptoJS.AES.encrypt(
-            password,
-            process.env.PASSWORD_SECRET_KEY
-        );
+        req.body.password = CryptoJS.AES.encrypt(password, process.env.PASSWORD_SECRET_KEY);
 
         const user = await User.create(req.body);
         //Handle send email
@@ -48,9 +45,7 @@ exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const user = await User.findOne({ username }).select(
-            "password username"
-        );
+        const user = await User.findOne({ username }).select("password username");
         if (!user) {
             return res.status(401).json({
                 errors: [
@@ -62,10 +57,7 @@ exports.login = async (req, res) => {
             });
         }
 
-        const decryptedPass = CryptoJS.AES.decrypt(
-            user.password,
-            process.env.PASSWORD_SECRET_KEY
-        ).toString(CryptoJS.enc.Utf8);
+        const decryptedPass = CryptoJS.AES.decrypt(user.password, process.env.PASSWORD_SECRET_KEY).toString(CryptoJS.enc.Utf8);
 
         if (decryptedPass !== password) {
             return res.status(401).json({
@@ -80,11 +72,7 @@ exports.login = async (req, res) => {
 
         user.password = undefined;
 
-        const token = jsonwebtoken.sign(
-            { id: user._id },
-            process.env.TOKEN_SELECT_KEY,
-            { expiresIn: "24h" }
-        );
+        const token = jsonwebtoken.sign({ id: user._id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
 
         res.status(200).json({ user, token });
     } catch (error) {
@@ -98,11 +86,7 @@ exports.loginGoogle = async (req, res) => {
         const user = await User.findOne({ googleId: id });
 
         if (user) {
-            const token = jsonwebtoken.sign(
-                { id: user.id },
-                process.env.TOKEN_SELECT_KEY,
-                { expiresIn: "24h" }
-            );
+            const token = jsonwebtoken.sign({ id: user.id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
             return res.status(200).json({ user, token });
         } else {
             const userRegister = await User.create({
@@ -112,11 +96,7 @@ exports.loginGoogle = async (req, res) => {
                 googleId: id,
                 status: true,
             });
-            const token = jsonwebtoken.sign(
-                { id: userRegister._id },
-                process.env.TOKEN_SELECT_KEY,
-                { expiresIn: "24h" }
-            );
+            const token = jsonwebtoken.sign({ id: userRegister._id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
             return res.status(200).json({ userRegister, token });
         }
     } catch (error) {
@@ -132,11 +112,7 @@ exports.loginFacebook = async (req, res) => {
         const user = await User.findOne({ facebookId: id });
 
         if (user) {
-            const token = jsonwebtoken.sign(
-                { id: user.id },
-                process.env.TOKEN_SELECT_KEY,
-                { expiresIn: "24h" }
-            );
+            const token = jsonwebtoken.sign({ id: user.id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
             return res.status(200).json({ user, token });
         } else {
             const userRegister = await User.create({
@@ -146,11 +122,7 @@ exports.loginFacebook = async (req, res) => {
                 facebookId: id,
                 status: true,
             });
-            const token = jsonwebtoken.sign(
-                { id: userRegister.id },
-                process.env.TOKEN_SELECT_KEY,
-                { expiresIn: "24h" }
-            );
+            const token = jsonwebtoken.sign({ id: userRegister.id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
             return res.status(200).json({ user: userRegister, token });
         }
     } catch (error) {
@@ -179,11 +151,7 @@ exports.isActive = async (req, res) => {
         }
         user.status = true;
         await user.save();
-        const token = jsonwebtoken.sign(
-            { id: user.id },
-            process.env.TOKEN_SELECT_KEY,
-            { expiresIn: "24h" }
-        );
+        const token = jsonwebtoken.sign({ id: user.id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
         res.status(200).json({ user, token });
     } catch (error) {
         res.status(500).json(error);
@@ -196,13 +164,7 @@ exports.forgotPassword = async (req, res) => {
         const user = await User.findOne({ email: email });
 
         const today = new Date();
-        const date =
-            today.getMonth() +
-            1 +
-            "-" +
-            today.getDate() +
-            "-" +
-            today.getFullYear();
+        const date = today.getMonth() + 1 + "-" + today.getDate() + "-" + today.getFullYear();
 
         if (!user) {
             return res.status(404).json({
@@ -248,15 +210,8 @@ exports.updatePassword = async (req, res) => {
     const { password, email } = req.body;
     console.log(req.body);
     try {
-        const cryptPassword = CryptoJS.AES.encrypt(
-            password,
-            process.env.PASSWORD_SECRET_KEY
-        );
-        const user = await User.findOneAndUpdate(
-            { email: email },
-            { password: cryptPassword.toString() },
-            { new: true }
-        );
+        const cryptPassword = CryptoJS.AES.encrypt(password, process.env.PASSWORD_SECRET_KEY);
+        const user = await User.findOneAndUpdate({ email: email }, { password: cryptPassword.toString() }, { new: true });
 
         res.status(200).json({ user });
     } catch (error) {

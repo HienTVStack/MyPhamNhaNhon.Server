@@ -6,16 +6,7 @@ exports.create = async (req, res) => {
         if (req.body.inStock === "on") {
             req.body.inStock = true;
         }
-        const {
-            name,
-            descriptionContent,
-            detailContent,
-            price,
-            imageUploadUrl,
-            inStock,
-            categorySelected,
-            tags,
-        } = req.body;
+        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags } = req.body;
 
         console.log(categorySelected);
 
@@ -84,10 +75,7 @@ exports.update = async (req, res) => {
 exports.updateImage = async (req, res, next) => {
     const { slug, imageList } = req.body;
     try {
-        const productUpdate = await Product.findOneAndUpdate(
-            { slug },
-            { imageList }
-        );
+        const productUpdate = await Product.findOneAndUpdate({ slug }, { imageList });
         const product = await Product.findOne({ slug });
 
         Promise.all([productUpdate, product])

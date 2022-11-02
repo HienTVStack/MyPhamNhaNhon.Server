@@ -46,10 +46,7 @@ exports.getCategoryBySlug = async (req, res) => {
 exports.updateCategory = async (req, res) => {
     const { id } = req.body;
     try {
-        const categoryUpdate = await Category.findOneAndUpdate(
-            { id },
-            req.body
-        );
+        const categoryUpdate = await Category.findOneAndUpdate({ id }, req.body);
 
         if (categoryUpdate) {
             res.status(200).json({
