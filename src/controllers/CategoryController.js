@@ -21,7 +21,7 @@ exports.createCategory = async (req, res) => {
     try {
         const category = await Category.create({ name: "Dưỡng ẩm" });
 
-        res.status(200).json(category);
+        res.status(200).json({ message: "OK", category });
     } catch (error) {
         res.status(404).json({
             message: `FAIL`,
@@ -36,7 +36,7 @@ exports.getCategoryBySlug = async (req, res) => {
         const category = await Category.findOne({ slug });
 
         if (category) {
-            res.status(200).json({ category });
+            res.status(200).json({ message: "OK", category });
         }
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
@@ -53,7 +53,7 @@ exports.updateCategory = async (req, res) => {
 
         if (categoryUpdate) {
             res.status(200).json({
-                message: `SUCCESS`,
+                message: `OK`,
                 category: categoryUpdate,
             });
         }

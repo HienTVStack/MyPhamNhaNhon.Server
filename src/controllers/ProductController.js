@@ -6,7 +6,6 @@ exports.create = async (req, res) => {
         if (req.body.inStock === "on") {
             req.body.inStock = true;
         }
-
         const {
             name,
             descriptionContent,
@@ -17,6 +16,8 @@ exports.create = async (req, res) => {
             categorySelected,
             tags,
         } = req.body;
+
+        console.log(categorySelected);
 
         const product = await Product.create({
             name: name,
@@ -32,13 +33,14 @@ exports.create = async (req, res) => {
 
         res.status(200).json({ message: "OK", product });
     } catch (error) {
+        console.log(error);
         res.status(404).json({ message: "FAIL", error });
     }
 };
 
 exports.getAll = async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find().sort({ createdAt: -1 });
 
         res.status(200).json({ message: "OK", products: products });
     } catch (error) {
@@ -68,14 +70,12 @@ exports.getBySlug = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    console.log(req.body);
     try {
         const product = await Product.updateOne(
             { slug: req.body.slug },
             req.body
         );
 
-        console.log(product);
         if (product) {
             res.status(200).json({ message: "OK", product });
         }

@@ -14,7 +14,11 @@ exports.create = async (req, res) => {
         }
 
         const tag = await Tag.create({ name });
-        res.status(200).json({ message: "CREATE SUCCESS", tag: tag });
+        console.log(tag);
+        res.status(200).json({
+            message: "OK",
+            tag: tag,
+        });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error: error });
     }
@@ -22,9 +26,9 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        const tags = await Tag.find({});
+        const tags = await Tag.find({}, { name: true, slug: true });
 
-        res.status(200).json({ message: "GET ALL SUCCESS", tags: tags });
+        res.status(200).json({ message: "OK", tags: tags });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
     }

@@ -19,19 +19,16 @@ const ProductSchema = new mongoose.Schema(
         inStock: { type: Boolean, default: false },
         category: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Category",
+                name: { type: String, ref: "Category" },
             },
         ],
         tags: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Tag",
+                name: { type: String, ref: "Tag" },
             },
         ],
         author: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Auth",
+            name: { type: String, ref: "Auth" },
         },
     },
     schemaOptions
