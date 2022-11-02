@@ -71,10 +71,7 @@ exports.getBySlug = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const product = await Product.updateOne(
-            { slug: req.body.slug },
-            req.body
-        );
+        const product = await Product.remove({ slug: req.body.slug }, req.body);
 
         if (product) {
             res.status(200).json({ message: "OK", product });
@@ -102,5 +99,34 @@ exports.updateImage = async (req, res, next) => {
             });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
+    }
+};
+
+// [POST] /api/product/:id/destroy
+exports.destroyById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Product.delete({ _id: id });
+        res.status(200).json({ message: "OK" });
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({ message: "FAIL", err });
+    }
+};
+
+// [POST] /api/product/:id/restored
+exports.restoredById = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+        if (id) {
+            const product = await Product.restore({ _id: id });
+
+            res.status(200).json({ message: "OK", product });
+        } else {
+            res.status(404).json({ message: "FAIL" });
+        }
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", err });
     }
 };
