@@ -39,6 +39,16 @@ exports.getAll = async (req, res) => {
     }
 };
 
+exports.getTrash = async (req, res) => {
+    try {
+        const productTrash = await Product.findDeleted({});
+
+        res.status(200).json({ message: "OK", products: productTrash });
+    } catch (error) {
+        res.status(200).json({ message: "FAIL", error });
+    }
+};
+
 exports.getById = async (req, res) => {
     try {
         console.log(req.params);
@@ -62,7 +72,7 @@ exports.getBySlug = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const product = await Product.remove({ slug: req.body.slug }, req.body);
+        const product = await Product.updateOne({ slug: req.body.slug }, req.body);
 
         if (product) {
             res.status(200).json({ message: "OK", product });
@@ -102,15 +112,40 @@ exports.destroyById = async (req, res) => {
     }
 };
 
+//[DELETE] /api/product/delete/:id
+exports.forceDelete = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Product.deleteOne({ _id: id });
+
+        res.status(200).json({ message: "OK" });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//[DELETE] /api/product/deleted/multiple
+exports.destroyMultiple = async (req, res) => {
+    const { idList } = req.body;
+
+    try {
+        const productDelete = await Product.delete({ _id: { $in: idList } });
+        const products = await Product.find({});
+
+        res.status(200).json({ message: "OK" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", error });
+    }
+};
+
 // [POST] /api/product/:id/restored
 exports.restoredById = async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     try {
         if (id) {
-            const product = await Product.restore({ _id: id });
-
-            res.status(200).json({ message: "OK", product });
+            await Product.restore({ _id: id });
+            res.status(200).json({ message: "OK" });
         } else {
             res.status(404).json({ message: "FAIL" });
         }

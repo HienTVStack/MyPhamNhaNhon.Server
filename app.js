@@ -37,11 +37,7 @@ mongoose
     .then(() => {
         server.listen(port);
         console.log(`Server run port: ${port}`);
-        // server.on("error", onError);
-        // server.on("listening", onListening);
-        console.log(
-            `Server connect success ${process.env.MONGODB_CONNECT_URL}`
-        );
+        console.log(`Server connect success ${process.env.MONGODB_CONNECT_URL}`);
     })
     .catch((err) => {
         console.log({ message: `Connect fail`, error: err });
