@@ -4,6 +4,7 @@ const slug = require("mongoose-slug-generator");
 const MongooseDelete = require("mongoose-delete");
 
 mongoose.plugin(slug);
+
 const ProductSchema = new mongoose.Schema(
     {
         name: { type: String, unique: true, required: true },
@@ -30,6 +31,15 @@ const ProductSchema = new mongoose.Schema(
         author: {
             name: { type: String, ref: "Auth" },
         },
+        review: [
+            {
+                author: { type: String, default: undefined },
+                content: { type: String, default: undefined },
+                star: { type: Number, default: 0 },
+                createdAt: { type: Date, default: new Date() },
+                status: { type: String, default: true },
+            },
+        ],
     },
     schemaOptions
 );
