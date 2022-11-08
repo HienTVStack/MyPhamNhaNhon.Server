@@ -29,9 +29,9 @@ const ProductSchema = new mongoose.Schema(
             },
         ],
         author: {
-            name: { type: String, ref: "Auth" },
+            fullName: { type: String, ref: "Auth" },
         },
-        review: [
+        reviews: [
             {
                 author: { type: String, default: undefined },
                 content: { type: String, default: undefined },

@@ -74,7 +74,7 @@ exports.login = async (req, res) => {
 
         const token = jsonwebtoken.sign({ id: user._id }, process.env.TOKEN_SELECT_KEY, { expiresIn: "24h" });
 
-        res.status(200).json({ user, token });
+        res.status(200).json({ message: "OK", user, token });
     } catch (error) {
         res.status(500).json({ message: error });
     }

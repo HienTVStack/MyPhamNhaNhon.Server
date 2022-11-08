@@ -1,14 +1,13 @@
-const Category = require("../models/Category");
+// const Category = require("../models/Category");
 const Product = require("../models/Product");
+const validate = require("../handlers/validation");
 
 exports.create = async (req, res) => {
     try {
         if (req.body.inStock === "on") {
             req.body.inStock = true;
         }
-        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags } = req.body;
-
-        console.log(categorySelected);
+        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author } = req.body;
 
         const product = await Product.create({
             name: name,
@@ -20,6 +19,7 @@ exports.create = async (req, res) => {
             inStock: inStock,
             category: categorySelected,
             tags: tags,
+            author,
         });
 
         res.status(200).json({ message: "OK", product });
@@ -51,8 +51,6 @@ exports.getTrash = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        console.log(req.params);
-
         // res.status(200)
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
@@ -60,13 +58,38 @@ exports.getById = async (req, res) => {
 };
 
 exports.getBySlug = async (req, res) => {
+    const { slug } = req.params;
+
     try {
-        const { slug } = req.params;
         const product = await Product.findOne({ slug: slug });
 
         res.status(200).json({ message: "OK", product: product });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
+    }
+};
+
+// [GET] /api/product/category/:id
+exports.getProductsByCategory = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const products = await Product.find({ "category._id": id }).limit(6);
+
+        res.status(200).json({ message: "OK", products: products });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", error: error });
+    }
+};
+
+exports.getProductIntroduce = async (req, res) => {
+    try {
+        const products = await Product.find({}).sort({ createdAt: "-1" }).limit(6);
+
+        res.status(200).json({ message: "OK", products: products });
+    } catch (error) {
+        console.log(error);
     }
 };
 
@@ -77,6 +100,33 @@ exports.update = async (req, res) => {
         if (product) {
             res.status(200).json({ message: "OK", product });
         }
+    } catch (error) {
+        res.status(404).json({ message: "FAIL", error });
+    }
+};
+
+exports.addReview = async (req, res) => {
+    const { id, reviews } = req.body;
+
+    console.log(id, reviews);
+    try {
+        // const product = await Product.findOneAndUpdate({ id }, { reviews });
+        const productAddReview = await Product.findOneAndUpdate({ id: id }, { $push: { reviews: reviews } });
+
+        Promise.all([productAddReview, Product.findOne({ id })])
+            .then(([tmp, product]) => {
+                // res.status(200).json({ message: "OK", product: product });
+                if (!tmp) {
+                    return res.status(404).json({ message: "FAIL" });
+                }
+                if (product) {
+                    res.status(200).json({ message: "OK", product: product });
+                }
+            })
+            .catch((err) => {
+                res.status(404).json({ message: "FAIL" });
+            });
+        // res.status(200).json({ message: "OK", product: product });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
     }

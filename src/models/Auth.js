@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
         emailGoogle: { type: String },
         emailFacebook: { type: String },
         phoneNumber: { type: String, default: undefined },
+        avatar: { type: String, default: "" },
         status: { type: Boolean, default: false },
         googleId: { type: String },
         facebookId: { type: String },
