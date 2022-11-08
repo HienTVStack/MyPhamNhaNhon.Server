@@ -6,5 +6,6 @@ router.use("/product", require("./productRoute"));
 router.use("/blog", require("./blogRoute"));
 router.use("/tag", require("./tagRoute"));
 router.use("/image", require("./imageRoute"));
+router.use("/cart", require("./cartRoute"));
 
 module.exports = router;

@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema(
         image: { type: String, default: undefined },
         imageList: [{ type: String, default: undefined }],
         rating: { type: Number, default: 0 },
-        numberViews: { type: Number, default: 0 },
+        numViews: { type: Number, default: 0 },
         inStock: { type: Boolean, default: false },
         category: [
             {

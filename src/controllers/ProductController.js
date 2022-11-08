@@ -1,5 +1,6 @@
 // const Category = require("../models/Category");
 const Product = require("../models/Product");
+const Image = require("../models/Images");
 const validate = require("../handlers/validation");
 
 exports.create = async (req, res) => {
@@ -8,7 +9,10 @@ exports.create = async (req, res) => {
             req.body.inStock = true;
         }
         const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author } = req.body;
-
+        // await Image.create({fileUrl: });
+        for (const img of imageUploadUrl) {
+            await Image.create({ fileUrl: img });
+        }
         const product = await Product.create({
             name: name,
             descriptionContent: descriptionContent,
@@ -62,6 +66,8 @@ exports.getBySlug = async (req, res) => {
 
     try {
         const product = await Product.findOne({ slug: slug });
+        product.numViews += 1;
+        await product.save();
 
         res.status(200).json({ message: "OK", product: product });
     } catch (error) {
