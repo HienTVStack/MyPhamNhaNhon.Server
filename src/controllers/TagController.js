@@ -14,7 +14,6 @@ exports.create = async (req, res) => {
         }
 
         const tag = await Tag.create({ name });
-        console.log(tag);
         res.status(200).json({
             message: "OK",
             tag: tag,

@@ -17,6 +17,17 @@ exports.addProductToCart = async (req, res) => {
     const { user, product } = req.body;
 
     try {
+        const cartFindProduct = await Cart.findOne({ "products.id": product.id });
+        if (cartFindProduct) {
+            let a = 0;
+            cartFindProduct.products.map((tmp) => {
+                if (tmp.id === product.id) {
+                    a = tmp.quantity + product.quantity;
+                }
+            });
+            await Cart.updateOne({ "customer.id": user.id, "products.id": product.id }, { $set: { "products.$.quantity": a } });
+            return res.status(200).json({ message: "OK" });
+        }
         const addProduct = await Cart.findOneAndUpdate({ "customer.id": user.id }, { $push: { products: product } });
 
         if (!addProduct) {
@@ -26,6 +37,7 @@ exports.addProductToCart = async (req, res) => {
 
         res.status(200).json({ message: "OK", cart: addProduct });
     } catch (error) {
+        console.log(error);
         res.status(404).json({ message: "FAIL", error });
     }
 };

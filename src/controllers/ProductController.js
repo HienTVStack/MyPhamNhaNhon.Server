@@ -114,7 +114,6 @@ exports.update = async (req, res) => {
 exports.addReview = async (req, res) => {
     const { id, reviews } = req.body;
 
-    console.log(id, reviews);
     try {
         // const product = await Product.findOneAndUpdate({ id }, { reviews });
         const productAddReview = await Product.findOneAndUpdate({ id: id }, { $push: { reviews: reviews } });
