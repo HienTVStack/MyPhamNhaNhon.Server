@@ -17,6 +17,8 @@ const cartSchema = new mongoose.Schema(
                 quantity: { type: Number, default: 0 },
                 slug: { type: String, ref: "product" },
                 image: { type: String, ref: "product" },
+                type: { type: String, default: "" },
+                createdAt: { type: Date, default: new Date() },
             },
         ],
     },

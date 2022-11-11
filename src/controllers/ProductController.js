@@ -8,8 +8,8 @@ exports.create = async (req, res) => {
         if (req.body.inStock === "on") {
             req.body.inStock = true;
         }
-        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author } = req.body;
-        // await Image.create({fileUrl: });
+        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author, type } = req.body;
+
         for (const img of imageUploadUrl) {
             await Image.create({ fileUrl: img });
         }
@@ -24,6 +24,7 @@ exports.create = async (req, res) => {
             category: categorySelected,
             tags: tags,
             author,
+            type: type,
         });
 
         res.status(200).json({ message: "OK", product });

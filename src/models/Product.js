@@ -18,6 +18,14 @@ const ProductSchema = new mongoose.Schema(
         rating: { type: Number, default: 0 },
         numViews: { type: Number, default: 0 },
         inStock: { type: Boolean, default: false },
+        numSold: { type: Boolean, default: 0 },
+        type: [
+            {
+                nameType: { type: String },
+                price: { type: Number, default: 0 },
+                quantityStock: { type: Number, default: 0 },
+            },
+        ],
         category: [
             {
                 name: { type: String, ref: "Category" },
