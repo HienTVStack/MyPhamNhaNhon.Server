@@ -8,5 +8,6 @@ router.use("/blog", require("./blogRoute"));
 router.use("/tag", require("./tagRoute"));
 router.use("/image", require("./imageRoute"));
 router.use("/cart", require("./cartRoute"));
+router.use("/saleOrder", require("./saleOrderRoute"));
 
 module.exports = router;
