@@ -15,6 +15,18 @@ const userSchema = new mongoose.Schema(
         googleId: { type: String },
         facebookId: { type: String },
         codeConfirm: { type: Number },
+        carts: [
+            {
+                id: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
+                name: { type: String, ref: "products" },
+                price: { type: Number },
+                quantity: { type: Number },
+                total: { type: String },
+                image: { type: String },
+                type: { type: String },
+                createdAt: { type: Date, default: new Date() },
+            },
+        ],
     },
     schemaOptions
 );

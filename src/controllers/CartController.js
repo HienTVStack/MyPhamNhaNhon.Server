@@ -1,3 +1,4 @@
+const Auth = require("../models/Auth");
 const Cart = require("../models/Cart");
 
 exports.getByIdAuth = async (req, res) => {
@@ -41,3 +42,12 @@ exports.addProductToCart = async (req, res) => {
         res.status(404).json({ message: "FAIL", error });
     }
 };
+
+// exports.addCartItem = async (req, res) => {
+//     const {id, cartItem} = req.body;
+//     try {
+//         const cart = await Auth.findByIdAndUpdate({i}, {carts: cartItem})
+//     } catch (error) {
+//         res.status(404).json({message: 'FAIL', success: false, description: 'ADD CART ITEM FAILED'})
+//     }
+// }
