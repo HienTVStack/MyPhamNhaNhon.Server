@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
         codeConfirm: { type: Number },
         carts: [
             {
-                id: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
+                id: { type: String},
                 name: { type: String, ref: "products" },
                 price: { type: Number },
                 quantity: { type: Number },

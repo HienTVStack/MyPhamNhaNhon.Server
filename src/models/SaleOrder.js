@@ -33,7 +33,8 @@ const SaleOrderSchema = new mongoose.Schema(
         amount: { type: Number, default: 0 },
         total: { type: Number, default: 0 },
         description: { type: String, default: "" },
-        createdBy: { type: String },
+        createdBy: { type: String, ref: "Auth" },
+        deliveryReal: { type: Date },
     },
     schemaOptions
 );

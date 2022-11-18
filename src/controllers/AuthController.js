@@ -219,3 +219,49 @@ exports.updatePassword = async (req, res) => {
         res.status(404).json(error);
     }
 };
+
+// Cart
+
+exports.addCart = async (req, res) => {
+    const { id } = req.params;
+    const cart = req.body;
+
+    try {
+        await User.findOne({ _id: id })
+            .then(async (user) => {
+                if (user.carts.length !== 0) {
+                    for (let item of user.carts) {
+                        if (item.id === cart.id && item.type === cart.type) {
+                            item.quantity += Number(cart.quantity);
+                            await user.save();
+                            return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
+                        }
+                    }
+                }
+                console.log(`Vao day`);
+                user.carts.push(cart);
+                await user.save();
+                return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
+            })
+            .catch((err) => {
+                console.log(err);
+                return res.status(404).json({ message: "FAIL", success: false, description: "ADD CART ITEM FALI" });
+            });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", success: false, description: "ADD CART ITEM FALI" });
+    }
+};
+
+exports.removedCartItem = async (req, res) => {
+    const { id } = req.params;
+    // console.log(req.body, id);
+    try {
+        const auth = await User.findOneAndUpdate({ _id: id }, { $pull: { carts: { _id: req.body.id } } });
+        console.log(auth);
+        res.status(200).json({ message: "OK", success: true, description: "REMOVED CART ITEM SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", success: false, description: "REMOVED CART ITEM FAILED" });
+    }
+};

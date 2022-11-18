@@ -8,5 +8,6 @@ const SaleOrder = require("../models/SaleOrder");
 route.post("/create", SaleOrderController.create);
 route.get("/getAll", SaleOrderController.getAll);
 route.get("/:id", SaleOrderController.getById);
+route.put("/import/:id", SaleOrderController.import);
 
 module.exports = route;

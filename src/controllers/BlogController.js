@@ -4,9 +4,9 @@ exports.getAll = async (req, res) => {
     try {
         const blogs = await Blog.find({});
 
-        res.status(200).json({ message: "OK", blogs: blogs });
+        res.status(200).json({ message: "OK", success: true, blogs: blogs });
     } catch (error) {
-        res.status(404).json({ message: "FAIL", description: "ERR_01" });
+        res.status(404).json({ message: "FAIL", success: false, description: "ERR_01" });
     }
 };
 

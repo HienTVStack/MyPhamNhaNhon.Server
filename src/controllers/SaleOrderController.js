@@ -1,4 +1,5 @@
 const SaleOrder = require("../models/SaleOrder");
+const Product = require("../models/Product");
 
 const totalPriceInvoiceSaleOrder = (products) => {
     let total = 0;
@@ -52,5 +53,38 @@ exports.getById = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: "FAIL", success: false, description: "GET BY ID INVOICE SALE ORDER FAIL" });
+    }
+};
+
+// Nhập hàng
+exports.import = async (req, res) => {
+    const { id } = req.params;
+
+    const products = req.body.products;
+
+    console.log(products);
+
+    try {
+        const invoice = await SaleOrder.findOneAndUpdate({ id }, { status: "SUCCESS", deliveryReal: req.body.deliveryReal || new Date() });
+        if (!invoice) {
+            res.status(404).json({ message: "FAIL", description: `IMPORT SALE ORDER FAILED`, success: false });
+        }
+        for (let item of products) {
+            const product = await Product.findOne({ name: item.name });
+            console.log(item);
+            await Promise.all(
+                product.type.map((typeItem) => {
+                    if (typeItem.nameType === item.type) {
+                        typeItem.quantityStock += Number(item.quantity);
+                    }
+                })
+            );
+            await product.save();
+        }
+
+        res.status(200).json({ message: "OK", success: true, description: `IMPORT SALE ORDER SUCCESS` });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", description: `IMPORT SALE ORDER FAILED`, success: false });
     }
 };

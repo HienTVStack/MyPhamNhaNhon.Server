@@ -38,9 +38,9 @@ exports.getAll = async (req, res) => {
     try {
         const products = await Product.find().sort({ createdAt: -1 });
 
-        res.status(200).json({ message: "OK", products: products });
+        res.status(200).json({ message: "OK", success: true, description: "PRODUCT LOAD SUCCESS", products: products });
     } catch (error) {
-        res.status(404).json(error);
+        res.status(404).json({ success: false, description: "PRODUCT GET ALL FAILED" });
     }
 };
 

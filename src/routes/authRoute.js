@@ -10,12 +10,8 @@ const router = express.Router();
 
 router.post(
     "/register",
-    body("username")
-        .isLength({ min: 8 })
-        .withMessage("Tên đăng nhập ít nhất là 8 kí tự"),
-    body("password")
-        .isLength({ min: 8 })
-        .withMessage("Mật khẩu ít nhất là 8 kí tự"),
+    body("username").isLength({ min: 8 }).withMessage("Tên đăng nhập ít nhất là 8 kí tự"),
+    body("password").isLength({ min: 8 }).withMessage("Mật khẩu ít nhất là 8 kí tự"),
     body("email").isEmail().withMessage("Vui lòng nhập email chính xác"),
     body("username").custom(async (value) => {
         return await User.findOne({ username: value }).then((user) => {
@@ -51,16 +47,8 @@ router.post("/login-facebook", AuthController.loginFacebook);
 router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
     res.status(200).json({ user: req.user });
 });
-router.post(
-    "/forgot-password",
-    body("email").isEmail().withMessage("Vui lòng nhập email chính xác"),
-    AuthController.forgotPassword
-);
-router.post(
-    "/update-password",
-    body("password")
-        .isLength({ min: 8 })
-        .withMessage(`Mật khẩu ít nhất là 8 kí tự`),
-    AuthController.updatePassword
-);
+router.post("/forgot-password", body("email").isEmail().withMessage("Vui lòng nhập email chính xác"), AuthController.forgotPassword);
+router.post("/update-password", body("password").isLength({ min: 8 }).withMessage(`Mật khẩu ít nhất là 8 kí tự`), AuthController.updatePassword);
+router.put("/:id/addCart", AuthController.addCart);
+router.put("/:id/removedCart", AuthController.removedCartItem);
 module.exports = router;
