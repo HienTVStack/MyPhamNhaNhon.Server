@@ -229,7 +229,7 @@ exports.addCart = async (req, res) => {
     try {
         await User.findOne({ _id: id })
             .then(async (user) => {
-                if (user.carts.length !== 0) {
+                if (user?.carts?.length !== 0) {
                     for (let item of user.carts) {
                         if (item.id === cart.id && item.type === cart.type) {
                             item.quantity += Number(cart.quantity);
