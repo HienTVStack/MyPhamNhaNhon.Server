@@ -8,6 +8,7 @@ const EmployeeController = require("../controllers/EmployeeController");
 
 const router = express.Router();
 
+router.get("/getAll", EmployeeController.getAll);
 router.post(
     "/register",
     body("username").isLength({ min: 8 }).withMessage("Tên đăng nhập ít nhất là 8 kí tự"),
@@ -22,7 +23,6 @@ router.post(
     validate.validation,
     EmployeeController.register
 );
-
 router.post("/login", EmployeeController.login);
 router.post("/verify-token", tokenHandler.verifyTokenEmp, (req, res) => {
     res.status(200).json({ user: req.user });

@@ -10,5 +10,6 @@ router.use("/image", require("./imageRoute"));
 router.use("/cart", require("./cartRoute"));
 router.use("/saleOrder", require("./saleOrderRoute"));
 router.use("/paymentOption", require("./paymentOption"));
+router.use("/invoice", require("./invoiceRoute"));
 
 module.exports = router;

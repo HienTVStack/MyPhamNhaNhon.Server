@@ -7,9 +7,10 @@ const userSchema = new mongoose.Schema(
         password: { type: String },
         fullName: { type: String },
         email: { type: String },
+        phone: { type: String, default: undefined },
+        address: { type: String, default: undefined },
         emailGoogle: { type: String },
         emailFacebook: { type: String },
-        phoneNumber: { type: String, default: undefined },
         avatar: { type: String, default: "" },
         status: { type: Boolean, default: false },
         googleId: { type: String },
@@ -17,7 +18,7 @@ const userSchema = new mongoose.Schema(
         codeConfirm: { type: Number },
         carts: [
             {
-                id: { type: String},
+                id: { type: String },
                 name: { type: String, ref: "products" },
                 price: { type: Number },
                 quantity: { type: Number },

@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const User = require("../models/Auth");
 const { htmlVerifyEmail } = require("../html/verifyEmail");
 const { htmlForgotPassword } = require("../html/forgotPassword");
+const { isObjectId } = require("../handlers/validation");
 
 exports.register = async (req, res) => {
     const { password } = req.body;
@@ -208,7 +209,6 @@ exports.forgotPassword = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
     const { password, email } = req.body;
-    console.log(req.body);
     try {
         const cryptPassword = CryptoJS.AES.encrypt(password, process.env.PASSWORD_SECRET_KEY);
         const user = await User.findOneAndUpdate({ email: email }, { password: cryptPassword.toString() }, { new: true });
@@ -217,6 +217,17 @@ exports.updatePassword = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).json(error);
+    }
+};
+
+exports.updateInfo = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ _id: req.params.id }, { address: req.body.address, phone: req.body.phone });
+        console.log(user);
+        res.status(200).json({ message: "OK", success: true, description: "UPDATE INFORMATION USER SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "OK", success: false, description: "UPDATE INFORMATION USER FAILED" });
     }
 };
 
@@ -238,7 +249,6 @@ exports.addCart = async (req, res) => {
                         }
                     }
                 }
-                console.log(`Vao day`);
                 user.carts.push(cart);
                 await user.save();
                 return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
@@ -255,13 +265,30 @@ exports.addCart = async (req, res) => {
 
 exports.removedCartItem = async (req, res) => {
     const { id } = req.params;
-    // console.log(req.body, id);
     try {
         const auth = await User.findOneAndUpdate({ _id: id }, { $pull: { carts: { _id: req.body.id } } });
-        console.log(auth);
         res.status(200).json({ message: "OK", success: true, description: "REMOVED CART ITEM SUCCESS" });
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: "FAIL", success: false, description: "REMOVED CART ITEM FAILED" });
+    }
+};
+
+//
+
+exports.totalAccess = async (req, res) => {
+    try {
+        const totalEmail = User.find({ email: { $exists: true } }).count();
+        const totalGoogle = User.find({ emailGoogle: { $exists: true } }).count();
+        const totalFacebook = User.find({ emailFacebook: { $exists: true } }).count();
+
+        await Promise.all([totalEmail, totalGoogle, totalFacebook])
+            .then((value) => {
+                res.status(200).json({ message: "OK", success: true, value });
+            })
+            .catch((err) => res.status(404).json({ message: "FAIL", success: false, description: "FAILED" }));
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", success: false, description: "FAILED" });
     }
 };

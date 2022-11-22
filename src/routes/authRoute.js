@@ -49,6 +49,10 @@ router.post("/verify-token", tokenHandler.verifyToken, (req, res) => {
 });
 router.post("/forgot-password", body("email").isEmail().withMessage("Vui lòng nhập email chính xác"), AuthController.forgotPassword);
 router.post("/update-password", body("password").isLength({ min: 8 }).withMessage(`Mật khẩu ít nhất là 8 kí tự`), AuthController.updatePassword);
+router.put("/:id/updateInfo", AuthController.updateInfo);
 router.put("/:id/addCart", AuthController.addCart);
 router.put("/:id/removedCart", AuthController.removedCartItem);
+//
+router.get("/totalAccess", AuthController.totalAccess);
+
 module.exports = router;
