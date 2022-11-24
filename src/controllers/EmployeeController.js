@@ -4,9 +4,9 @@ const jsonwebtoken = require("jsonwebtoken");
 
 exports.getAll = async (req, res) => {
     try {
-        const users = await Employee.find({}).sort({ createdAt: 1 });
+        const employees = await Employee.find({}).sort({ createdAt: 1 });
 
-        res.status(200).json({ message: "OK", success: true, description: "GET ALL EMPLOYEE SUCCESS", users: users });
+        res.status(200).json({ message: "OK", success: true, description: "GET ALL EMPLOYEE SUCCESS", employees: employees });
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: "FAIL", success: false, description: "GET ALL USER FAILED" });

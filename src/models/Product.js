@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema(
         descriptionContent: { type: String, default: `Chưa có mô tả nào` },
         detailContent: { type: String, default: `Chưa có mô tả nào` },
         price: { type: Number, required: true, default: 0 },
+        salePrice: { type: Number, default: 0 },
         quantityStock: { type: Number, default: 0 },
         image: { type: String, default: undefined },
         imageList: [{ type: String, default: undefined }],

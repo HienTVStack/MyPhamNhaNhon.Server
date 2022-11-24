@@ -1,5 +1,6 @@
 const Invoice = require("../models/Invoice");
 const User = require("../models/Auth");
+const Discount = require("../models/Discount");
 
 exports.getAll = async (req, res) => {
     try {
@@ -35,6 +36,7 @@ exports.create = async (req, res) => {
             req.body.products?.map((item) => {
                 idListRemove.push(item.id);
             });
+            await Discount.updateOne({ code: req.body?.discount?.code }, { $pull: { customers: { id: req.body?.auth?.id } } });
             await User.updateMany({ id: req.body.auth.id }, { $pull: { carts: { id: { $in: idListRemove } } } });
             res.status(200).json({ message: "OK", success: true, description: "CREATE INVOICE SUCCESS", invoice: response });
         }

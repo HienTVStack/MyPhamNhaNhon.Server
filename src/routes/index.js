@@ -11,5 +11,6 @@ router.use("/cart", require("./cartRoute"));
 router.use("/saleOrder", require("./saleOrderRoute"));
 router.use("/paymentOption", require("./paymentOption"));
 router.use("/invoice", require("./invoiceRoute"));
+router.use("/discount", require('./discountRoute'))
 
 module.exports = router;

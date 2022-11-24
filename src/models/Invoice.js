@@ -21,8 +21,8 @@ const InvoiceSchema = new mongoose.Schema(
         ],
         total: { type: String },
         discount: {
-            discountText: { type: String },
-            discount: { type: Number },
+            code: { type: String },
+            discountValue: { type: Number },
         },
         priceDelivery: { type: Number },
         paymentOption: { type: String },

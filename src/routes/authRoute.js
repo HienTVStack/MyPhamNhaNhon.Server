@@ -8,6 +8,7 @@ const AuthController = require("../controllers/AuthController");
 
 const router = express.Router();
 
+router.get("/getAll", AuthController.getAll);
 router.post(
     "/register",
     body("username").isLength({ min: 8 }).withMessage("Tên đăng nhập ít nhất là 8 kí tự"),

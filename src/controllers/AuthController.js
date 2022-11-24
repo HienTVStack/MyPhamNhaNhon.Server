@@ -6,6 +6,17 @@ const { htmlVerifyEmail } = require("../html/verifyEmail");
 const { htmlForgotPassword } = require("../html/forgotPassword");
 const { isObjectId } = require("../handlers/validation");
 
+exports.getAll = async (req, res) => {
+    try {
+        const userList = await User.find({}).sort({ createdAt: 1 });
+
+        res.status(200).json({ message: "OK", success: true, description: "GET ALL USER SUCCESS", userList: userList });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", success: false, description: "GET ALL USER FAILED" });
+    }
+};
+
 exports.register = async (req, res) => {
     const { password } = req.body;
 
