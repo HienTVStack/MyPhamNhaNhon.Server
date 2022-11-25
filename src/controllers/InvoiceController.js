@@ -31,7 +31,7 @@ exports.getByIdAuth = async (req, res) => {
 exports.getById = async (req, res) => {
     const { id } = req.params;
     try {
-        const invoice = await Invoice.findOne({ id });
+        const invoice = await Invoice.findOne({ _id: id });
 
         res.status(200).json({ message: "OK", success: true, invoice, description: "GET INVOICE BY ID SUCCESS" });
     } catch (error) {
