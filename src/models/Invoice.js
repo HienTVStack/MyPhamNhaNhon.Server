@@ -9,13 +9,13 @@ const InvoiceSchema = new mongoose.Schema(
             address: { type: String },
             phone: { type: String },
         },
-        status: { type: Number, default: 0 }, // 0: Tạo mới - 1: Đang giao - 2. Thành công
+        status: { type: Number, default: 0 }, // 0 tao moi, 1. giao hang, 2 thanh cong, 3 loi, -1 huy
         products: [
             {
                 name: { type: String },
                 type: { type: String },
                 quantity: { type: Number },
-                quantity: { type: String },
+                price: { type: Number },
                 image: { type: String },
             },
         ],
