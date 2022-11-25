@@ -8,7 +8,7 @@ const { isObjectId } = require("../handlers/validation");
 
 exports.getAll = async (req, res) => {
     try {
-        const userList = await User.find({}).sort({ createdAt: 1 });
+        const userList = await User.find({}).sort({ createdAt: -1 });
 
         res.status(200).json({ message: "OK", success: true, description: "GET ALL USER SUCCESS", userList: userList });
     } catch (error) {
