@@ -9,7 +9,7 @@ router.get("/getAll", DisCountController.getAll);
 router.post(
     "/create",
     body("code").custom(async (value) => {
-        return await Discount.findOne({ code: value }).then((discount) => {
+        return await Discount.findOne({ status: true, type: 1, code: value }).then((discount) => {
             if (discount) {
                 return Promise.reject(`Mã khuyến mãi đã được sử dụng`);
             }
@@ -19,5 +19,6 @@ router.post(
     DisCountController.create
 );
 router.post("/checkCodeByCustomer", DisCountController.checkCodeByCustomer);
+router.post("/checkTotalInvoiceVerifyDiscount", DisCountController.checkTotalInvoiceVerifyDiscount);
 
 module.exports = router;

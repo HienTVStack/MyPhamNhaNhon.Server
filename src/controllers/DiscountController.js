@@ -28,7 +28,7 @@ exports.checkCodeByCustomer = async (req, res) => {
         let isCheck = false;
         let voucher = null;
         const today = new Date();
-        await Discount.findOne({ code: req.body.code })
+        await Discount.findOne({ code: req.body.code, type: 1, status: true })
             .then((res) => {
                 res?.customers?.map((item) => {
                     if (item.id === req.body.idUser) {
@@ -53,5 +53,33 @@ exports.checkCodeByCustomer = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: "FAILED", success: false, description: "CHECK VOUCHER FAILED" });
+    }
+};
+// Giảm giá trên tổng hóa đơn
+exports.checkTotalInvoiceVerifyDiscount = async (req, res) => {
+    const { totalInvoice } = req.body;
+    const discountArr = [];
+    const today = new Date();
+
+    try {
+        await Discount.find({
+            status: true,
+            type: 2,
+            invoiceMin: { $lte: Number(totalInvoice) },
+            startedAt: { $lte: new Date(today) },
+            finishedAt: { $gt: new Date(today) },
+        })
+            .then((discounts) => {
+                return res.status(200).json({
+                    message: "OK",
+                    success: true,
+                    description: "CHECK DISCOUNT WITH TOTAL INVOICE SUCCESS",
+                    discount: discounts[0],
+                });
+            })
+            .catch((err) => console.log(err));
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAILED", success: false, description: "CHECK DISCOUNT WITH TOTAL INVOICE FAILED" });
     }
 };

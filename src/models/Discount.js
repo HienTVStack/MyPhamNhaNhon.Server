@@ -10,7 +10,7 @@ const discountSchema = new mongoose.Schema(
         name: { type: String },
         description: { type: String },
         code: { type: String, unique: true },
-        type: { type: String, require: true },
+        type: { type: Number, require: -1 }, // 1. Voucher 2. Giảm giá trên hóa đơn -1.Lỗi
         discountValue: { type: Number, default: 0 },
         discountValueMax: { type: Number },
         invoiceMin: { type: Number, default: 0 },

@@ -20,10 +20,12 @@ const InvoiceSchema = new mongoose.Schema(
             },
         ],
         total: { type: Number },
+        priceDiscount: { type: Number },
         discount: {
             code: { type: String },
             discountValue: { type: Number },
         },
+
         priceDelivery: { type: Number },
         paymentOption: { type: String },
         deliveryAt: { type: String },
