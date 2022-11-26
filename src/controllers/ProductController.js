@@ -116,12 +116,10 @@ exports.addReview = async (req, res) => {
     const { id, reviews } = req.body;
 
     try {
-        // const product = await Product.findOneAndUpdate({ id }, { reviews });
-        const productAddReview = await Product.findOneAndUpdate({ id: id }, { $push: { reviews: reviews } });
+        const productAddReview = Product.findOneAndUpdate({ _id: id }, { $push: { reviews: reviews } });
 
-        Promise.all([productAddReview, Product.findOne({ id })])
+        await Promise.all([productAddReview, Product.findOne({ _id: id })])
             .then(([tmp, product]) => {
-                // res.status(200).json({ message: "OK", product: product });
                 if (!tmp) {
                     return res.status(404).json({ message: "FAIL" });
                 }
@@ -130,9 +128,9 @@ exports.addReview = async (req, res) => {
                 }
             })
             .catch((err) => {
+                console.log(err);
                 res.status(404).json({ message: "FAIL" });
             });
-        // res.status(200).json({ message: "OK", product: product });
     } catch (error) {
         res.status(404).json({ message: "FAIL", error });
     }

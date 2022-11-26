@@ -24,15 +24,14 @@ exports.create = async (req, res) => {
     try {
         const saleOrder = await SaleOrder.create(_saleOrder);
 
-        res.status(200).json({ message: "OK", saleOrder });
+        res.status(200).json({ message: "OK", success: true, saleOrder });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ message: "FAIL", description: `Create invoice sale order fail` });
+        res.status(404).json({ message: "FAIL", success: false, description: `Create invoice sale order fail` });
     }
 };
 
 exports.getAll = async (req, res) => {
-    console.log(`Get all`);
     try {
         const saleOrders = await SaleOrder.find({}).sort({ updatedAt: 1 });
 
@@ -61,8 +60,6 @@ exports.import = async (req, res) => {
     const { id } = req.params;
 
     const products = req.body.products;
-
-    console.log(products);
 
     try {
         const invoice = await SaleOrder.findOneAndUpdate({ id }, { status: "SUCCESS", deliveryReal: req.body.deliveryReal || new Date() });
