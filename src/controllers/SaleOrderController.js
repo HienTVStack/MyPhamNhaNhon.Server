@@ -70,7 +70,7 @@ exports.import = async (req, res) => {
             const product = await Product.findOne({ name: item.name });
             await Promise.all(
                 product.type.map((typeItem) => {
-                    if (typeItem.nameType === item.nameType) {
+                    if (typeItem.nameType === item.type) {
                         typeItem.quantityStock += Number(item.quantity);
                     }
                 })

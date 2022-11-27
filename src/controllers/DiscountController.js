@@ -19,7 +19,21 @@ exports.create = async (req, res) => {
         res.status(200).json({ message: "OK", success: true, description: "CREATE SUCCESS", discount });
     } catch (error) {
         console.log(error);
-        res.status(404).json({ message: "FAIL", success: false, description: "CREATE DISCOUNT FAILED" });
+        res.status(404).json({ message: "FAIL", success: false, description: "CREATE DISCOUNT FAILED", error });
+    }
+};
+
+exports.updateStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const discount = await Discount.findOneAndUpdate({ _id: id }, { status: status });
+
+        res.status(200).json({ message: "OK", success: true, description: "CHANGE STATUS COUPON SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: "FAIL", success: false, description: "CHANGE STATUS COUPON FAILED", error });
     }
 };
 

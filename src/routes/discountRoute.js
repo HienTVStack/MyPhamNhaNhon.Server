@@ -20,5 +20,6 @@ router.post(
 );
 router.post("/checkCodeByCustomer", DisCountController.checkCodeByCustomer);
 router.post("/checkTotalInvoiceVerifyDiscount", DisCountController.checkTotalInvoiceVerifyDiscount);
+router.put("/:id/status", DisCountController.updateStatus);
 
 module.exports = router;
