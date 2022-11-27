@@ -13,13 +13,13 @@ const ProductSchema = new mongoose.Schema(
         detailContent: { type: String, default: `Chưa có mô tả nào` },
         // price: { type: Number, required: true, default: 0 },
         discountValue: { type: Number, default: 0 },
-        quantityStock: { type: Number, default: 0 },
+        // quantityStock: { type: Number, default: 0 },
         image: { type: String, default: undefined },
         imageList: [{ type: String, default: undefined }],
         rating: { type: Number, default: 0 },
         numViews: { type: Number, default: 0 },
         inStock: { type: Boolean, default: true },
-        numSold: { type: Boolean, default: 0 },
+        numSold: { type: Number, default: 0 },
         type: [
             {
                 nameType: { type: String },

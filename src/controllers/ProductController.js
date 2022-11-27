@@ -124,7 +124,7 @@ exports.addReview = async (req, res) => {
                     return res.status(404).json({ message: "FAIL" });
                 }
                 if (product) {
-                    res.status(200).json({ message: "OK", product: product });
+                    res.status(200).json({ message: "OK", success: true, product: product });
                 }
             })
             .catch((err) => {

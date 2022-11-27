@@ -1,6 +1,9 @@
 const Invoice = require("../models/Invoice");
 const User = require("../models/Auth");
 const Discount = require("../models/Discount");
+const Product = require("../models/Product");
+const { isObjectId } = require("../handlers/validation");
+const { default: mongoose } = require("mongoose");
 
 exports.getAll = async (req, res) => {
     try {
@@ -43,12 +46,14 @@ exports.getById = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const response = await Invoice.create(req.body);
-        console.log(response);
         if (response) {
             const idListRemove = [];
+            const productObjUpdate = [];
             req.body.products?.map((item) => {
                 idListRemove.push(item.id);
+                productObjUpdate.push({ idProduct: item.id, quantity: item.quantity, nameType: item.nameType, idType: item.idType });
             });
+            await updateQuantityProduct(productObjUpdate);
             const discountUpdate = Discount.updateOne({ code: req.body?.discount?.code }, { $pull: { customers: { id: req.body?.auth?.id } } });
             const userUpdate = User.updateMany({ id: req.body.auth.id }, { $pull: { carts: { id: { $in: idListRemove } } } });
             await Promise.all([discountUpdate, userUpdate]);
@@ -60,10 +65,26 @@ exports.create = async (req, res) => {
     }
 };
 
+const updateQuantityProduct = async (objList) => {
+    try {
+        for (const item of objList) {
+            const product = await Product.findOne({ _id: item.idProduct });
+            product?.type.map((typeItem) => {
+                if (typeItem.nameType === item.nameType) {
+                    typeItem.quantityStock -= item.quantity;
+                }
+            });
+            product.numSold += item.quantity;
+            await product.save();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 exports.updateStatus = async (req, res) => {
     const { id } = req.params;
-    console.log(req.body.status);
-    console.log(id);
+
     try {
         switch (req.body.status) {
             case -1:
