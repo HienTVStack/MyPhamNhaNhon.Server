@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const user = await User.findOne({ username }).select("password username");
+        const user = await User.findOne({ username, status: true }).select("password username");
         if (!user) {
             return res.status(401).json({
                 errors: [
