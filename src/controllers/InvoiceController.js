@@ -1,9 +1,11 @@
 const Invoice = require("../models/Invoice");
 const User = require("../models/Auth");
+const paypal = require("paypal-rest-sdk");
 const Discount = require("../models/Discount");
 const Product = require("../models/Product");
 const { isObjectId } = require("../handlers/validation");
-const { default: mongoose } = require("mongoose");
+const { handleSendEmailUpdateStatus } = require("../handlers/handleSendEmail.js");
+const { findOneAndUpdate } = require("../models/Invoice");
 
 exports.getAll = async (req, res) => {
     try {
@@ -82,23 +84,78 @@ const updateQuantityProduct = async (objList) => {
     }
 };
 
+const handleUpdateStatusInvoice = async (idInvoice, numStatus) => {
+    try {
+        const invoice = await Invoice.findOneAndUpdate({ _id: idInvoice }, { status: numStatus });
+        console.log(invoice);
+        if (invoice) {
+            const email = invoice?.auth?.email;
+            console.log(email);
+            email && handleSendEmailUpdateStatus(invoice?.auth.name, email, idInvoice);
+        }
+    } catch (error) {
+        return false;
+    }
+};
+
 exports.updateStatus = async (req, res) => {
     const { id } = req.params;
-
     try {
         switch (req.body.status) {
             case -1:
             case 0:
             case 1:
             case 2:
-                await Invoice.findOneAndUpdate({ _id: id }, { status: req.body.status });
+                // await Invoice.findOneAndUpdate({ _id: id }, { status: req.body.status });
+                handleUpdateStatusInvoice(id, req.body.status);
                 return res.status(200).json({ message: "OK", success: true, description: "UPDATE STATUS INVOICE SUCCESS" });
             default:
-                await Invoice.findOneAndUpdate({ id }, { status: 3 });
+                await Invoice.findOneAndUpdate({ _id: id }, { status: 3 });
                 return res.status(200).json({ message: "OK", success: false, description: "UPDATE STATUS INVOICE SUCCESS" });
         }
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: "FAILED", success: false, description: "UPDATE STATUS INVOICE FAILED" });
     }
+};
+
+exports.paypal = async (req, res) => {
+    var create_payment_json = {
+        intent: "sale",
+        payer: {
+            payment_method: "paypal",
+        },
+        redirect_urls: {
+            return_url: "http://return.url",
+            cancel_url: "http://cancel.url",
+        },
+        transactions: [
+            {
+                item_list: {
+                    items: [
+                        {
+                            name: "item",
+                            sku: "item",
+                            price: "1.00",
+                            currency: "USD",
+                            quantity: 1,
+                        },
+                    ],
+                },
+                amount: {
+                    currency: "USD",
+                    total: "1.00",
+                },
+                description: "This is the payment description.",
+            },
+        ],
+    };
+    paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("Create Payment Response");
+            console.log(payment);
+        }
+    });
 };

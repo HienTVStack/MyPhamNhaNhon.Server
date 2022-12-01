@@ -8,6 +8,7 @@ const InvoiceSchema = new mongoose.Schema(
             name: { type: String },
             address: { type: String },
             phone: { type: String },
+            email: { type: String },
         },
         status: { type: Number, default: 0 }, // 0 tao moi, 1. giao hang, 2 thanh cong, 3 loi, -1 huy
         products: [
@@ -25,7 +26,6 @@ const InvoiceSchema = new mongoose.Schema(
             code: { type: String },
             discountValue: { type: Number },
         },
-
         priceDelivery: { type: Number },
         paymentOption: { type: String },
         deliveryAt: { type: String },
@@ -33,6 +33,7 @@ const InvoiceSchema = new mongoose.Schema(
             id: { type: String, ref: "Employee" },
             fullName: { type: String },
         },
+        isPayment: { type: Boolean, default: 0 },
         // employeeDelivery:
     },
     schemaOptions

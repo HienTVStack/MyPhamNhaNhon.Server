@@ -3,7 +3,7 @@ const Discount = require("../models/Discount");
 
 exports.getAll = async (req, res) => {
     try {
-        const discounts = await Discount.find({}).sort({ createdAt: 1 });
+        const discounts = await Discount.find({}).sort({ createdAt: -1 });
 
         res.status(200).json({ message: "OK", success: true, description: "GET ALL DISCOUNT LIST SUCCESS", discounts: discounts });
     } catch (error) {

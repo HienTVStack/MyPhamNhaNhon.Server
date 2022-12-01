@@ -5,6 +5,8 @@ const logger = require("morgan");
 const cors = require("cors");
 const methodOverride = require("method-override");
 
+const paypal = require("paypal-rest-sdk");
+
 const debug = require("debug")("myphamnhanhon-server:server");
 const http = require("http");
 const dotenv = require("dotenv");
@@ -31,6 +33,14 @@ app.use("/api", require("./src/routes"));
 
 const port = process.env.PORT || "3000";
 app.set("port", port);
+
+// Paypal
+
+paypal.configure({
+    mode: "sandbox",
+    client_id: "AVtjVD9kRahAkIBXi6UJglT_W4VdLB5vo6-4y2JLL3wzPUQUAvDKgozaBEYI4VIJaocOL-w28R8611Ev",
+    client_secret: "EDmPIAF1oMW3fxs9btvdh-Tzdv-7Re66aOZ0zejYKapTlt9SujG7-Erov2ti2Mr58382wZ2Ajki_LaWT",
+});
 
 mongoose
     .connect(process.env.MONGODB_CONNECT_URL)
