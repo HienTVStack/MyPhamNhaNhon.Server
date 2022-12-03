@@ -33,6 +33,20 @@ exports.getByIdAuth = async (req, res) => {
     }
 };
 
+exports.getListInvoiceAuth = async (req, res) => {
+    const { id } = req.params;
+
+    console.log(id);
+    try {
+        const invoices = await Invoice.find({ "auth.id": id }).sort({ createdAt: -1 });
+
+        res.status(200).json({ success: true, description: "GET LIST INVOICE OF AUTH SUCCESS", invoices: invoices });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ success: false, description: "GET LIST INVOICE OF AUTH FAILED" });
+    }
+};
+
 exports.getById = async (req, res) => {
     const { id } = req.params;
     try {
