@@ -24,12 +24,15 @@ const ProductSchema = new mongoose.Schema(
             {
                 nameType: { type: String },
                 price: { type: Number, default: 0 },
+                salePrice: { type: Number, default: 0 },
                 quantityStock: { type: Number, default: 0 },
             },
         ],
         category: [
             {
+                id: { type: String },
                 name: { type: String, ref: "Category" },
+                slug: { type: String },
             },
         ],
         tags: [

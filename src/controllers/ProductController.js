@@ -13,6 +13,11 @@ exports.create = async (req, res) => {
         for (const img of imageUploadUrl) {
             await Image.create({ fileUrl: img });
         }
+
+        for (const item of type) {
+            item.salePrice = item.price;
+        }
+
         const product = await Product.create({
             name: name,
             descriptionContent: descriptionContent,
@@ -205,5 +210,16 @@ exports.restoredById = async (req, res) => {
         }
     } catch (error) {
         res.status(404).json({ message: "FAIL", err });
+    }
+};
+
+exports.getProductBySlugCategory = async (req, res) => {
+    const { slugCategory } = req.params;
+    try {
+        const products = await Product.find({ "category.slug": slugCategory }).sort({ createdAt: -1 });
+        res.status(200).json({ success: true, description: "GET PRODUCT BY CATEGORY SUCCESS", products });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ success: true, description: "GET PRODUCT BY CATEGORY FAILED" });
     }
 };

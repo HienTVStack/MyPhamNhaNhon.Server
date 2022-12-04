@@ -42,5 +42,7 @@ router.post("/:id/destroy", ProductController.destroyById);
 router.delete("/delete/:id", ProductController.forceDelete);
 router.post("/deleted/multiple", ProductController.destroyMultiple);
 router.post("/:id/restored", ProductController.restoredById);
+// category
+router.get("/:slugCategory", ProductController.getProductBySlugCategory);
 
 module.exports = router;
