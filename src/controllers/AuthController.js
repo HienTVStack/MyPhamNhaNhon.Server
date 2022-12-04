@@ -224,10 +224,34 @@ exports.updatePassword = async (req, res) => {
         const cryptPassword = CryptoJS.AES.encrypt(password, process.env.PASSWORD_SECRET_KEY);
         const user = await User.findOneAndUpdate({ email: email }, { password: cryptPassword.toString() }, { new: true });
 
-        res.status(200).json({ user });
+        res.status(200).json({ success: true, user });
     } catch (error) {
         console.log(error);
-        res.status(404).json(error);
+        res.status(404).json({ success: false, error });
+    }
+};
+
+exports.changePassword = async (req, res) => {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        const user = await User.findOne({ _id: id }).select("password username");
+
+        const decryptedPass = CryptoJS.AES.decrypt(user.password, process.env.PASSWORD_SECRET_KEY).toString(CryptoJS.enc.Utf8);
+
+        if (oldPassword !== decryptedPass) {
+            return res.status(404).json({ success: false, description: "PASSWORD NOT MATCHES" });
+        }
+
+        const cryptPassword = CryptoJS.AES.encrypt(newPassword, process.env.PASSWORD_SECRET_KEY);
+        user.password = cryptPassword.toString();
+
+        await user.save();
+        res.status(200).json({ success: true, description: "CHANGE PASSWORD USER SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ success: false, description: "CHANGE PASSWORD USER FAILED" });
     }
 };
 
