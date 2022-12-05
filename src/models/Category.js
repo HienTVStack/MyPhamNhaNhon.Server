@@ -7,6 +7,7 @@ mongoose.plugin(slug);
 const categorySchema = new mongoose.Schema(
     {
         name: { type: String, unique: true },
+        description: { type: String },
         slug: { type: String, unique: true, slug: "name" },
     },
     schemaOptions

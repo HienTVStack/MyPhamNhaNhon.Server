@@ -6,25 +6,27 @@ exports.getAllCategory = async (req, res) => {
 
         res.status(200).json({
             message: "OK",
+            success: true,
             categories: categories,
         });
     } catch (error) {
         res.status(404).json({
             message: `FAIL`,
+            success: false,
             error,
         });
     }
 };
 
 exports.createCategory = async (req, res) => {
-    console.log(req.body);
     try {
-        const category = await Category.create({ name: "Dưỡng ẩm" });
+        const category = await Category.create(req.body);
 
-        res.status(200).json({ message: "OK", category });
+        res.status(200).json({ message: "OK", success: true, category });
     } catch (error) {
         res.status(404).json({
             message: `FAIL`,
+            success: false,
             error,
         });
     }
@@ -44,20 +46,34 @@ exports.getCategoryBySlug = async (req, res) => {
 };
 
 exports.updateCategory = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
-        const categoryUpdate = await Category.findOneAndUpdate({ id }, req.body);
+        const categoryUpdate = await Category.findOneAndUpdate({ _id: id }, req.body);
 
         if (categoryUpdate) {
             res.status(200).json({
                 message: `OK`,
-                category: categoryUpdate,
+                success: true,
             });
         }
     } catch (error) {
         res.status(404).json({
             message: `FAIL`,
+            success: false,
             error: error,
         });
+    }
+};
+
+exports.destroyCategory = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await Category.deleteOne({ _id: id });
+
+        res.status(200).json({ success: true, description: "DELETED CATEGORY SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ success: false, description: "DELETED CATEGORY FAILED" });
     }
 };

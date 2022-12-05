@@ -17,6 +17,7 @@ router.post(
     CategoryController.createCategory
 );
 router.get("/getBySlug", CategoryController.getCategoryBySlug);
-router.post("/update", CategoryController.updateCategory);
+router.put("/:id/update", CategoryController.updateCategory);
+router.delete("/:id", CategoryController.destroyCategory);
 
 module.exports = router;
