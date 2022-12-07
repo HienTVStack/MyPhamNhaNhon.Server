@@ -11,15 +11,14 @@ const ProductSchema = new mongoose.Schema(
         slug: { type: String, slug: "name", unique: true },
         descriptionContent: { type: String, default: `Chưa có mô tả nào` },
         detailContent: { type: String, default: `Chưa có mô tả nào` },
-        // price: { type: Number, required: true, default: 0 },
         discountValue: { type: Number, default: 0 },
-        // quantityStock: { type: Number, default: 0 },
         image: { type: String, default: undefined },
         imageList: [{ type: String, default: undefined }],
         rating: { type: Number, default: 0 },
         numViews: { type: Number, default: 0 },
         inStock: { type: Boolean, default: true },
         numSold: { type: Number, default: 0 },
+        idSupplier: { type: String, ref: "supplier" },
         type: [
             {
                 nameType: { type: String },

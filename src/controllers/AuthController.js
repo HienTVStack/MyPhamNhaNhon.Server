@@ -286,7 +286,8 @@ exports.addCart = async (req, res) => {
                 }
                 user.carts.push(cart);
                 await user.save();
-                return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
+
+                return res.status(200).json({ message: "OK", success: true, user: data, description: "ADD CART ITEM SUCCESS" });
             })
             .catch((err) => {
                 console.log(err);

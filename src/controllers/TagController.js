@@ -27,8 +27,8 @@ exports.getAll = async (req, res) => {
     try {
         const tags = await Tag.find({}, { name: true, slug: true });
 
-        res.status(200).json({ message: "OK", tags: tags });
+        res.status(200).json({ message: "OK", success: true, tags: tags });
     } catch (error) {
-        res.status(404).json({ message: "FAIL", error });
+        res.status(404).json({ message: "FAIL", success: false, error });
     }
 };

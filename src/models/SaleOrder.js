@@ -13,6 +13,7 @@ const SaleOrderSchema = new mongoose.Schema(
             address: { type: String, require: true },
             phone: { type: String, require: true },
         },
+        idSupplier: { type: String },
         status: { type: Number, default: 0 }, //0 tạo mới 1. đang giao 2. hoàn thành -1 đã hủy
         createdDate: { type: Date, require: true, default: new Date() },
         dueDate: { type: Date, require: true },

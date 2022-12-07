@@ -8,7 +8,8 @@ exports.create = async (req, res) => {
         if (req.body.inStock === "on") {
             req.body.inStock = true;
         }
-        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author, type } = req.body;
+        const { name, descriptionContent, detailContent, price, imageUploadUrl, inStock, categorySelected, tags, author, type, idSupplier } =
+            req.body;
 
         for (const img of imageUploadUrl) {
             await Image.create({ fileUrl: img });
@@ -18,6 +19,7 @@ exports.create = async (req, res) => {
             item.salePrice = item.price;
         }
 
+        console.log(idSupplier);
         const product = await Product.create({
             name: name,
             descriptionContent: descriptionContent,
@@ -29,6 +31,7 @@ exports.create = async (req, res) => {
             category: categorySelected,
             tags: tags,
             author,
+            idSupplier,
             type: type,
         });
 
