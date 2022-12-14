@@ -272,12 +272,18 @@ exports.addCart = async (req, res) => {
     const { id } = req.params;
     const cart = req.body;
 
+    console.log(cart);
+
     try {
         await User.findOne({ _id: id })
             .then(async (user) => {
                 if (user?.carts?.length !== 0) {
                     for (let item of user.carts) {
-                        if (item.id === cart.id && item.type === cart.type) {
+                        console.log("item.id", item.id);
+                        console.log("cart.id", cart.id);
+                        console.log("item.type", item.idType);
+                        console.log("cart.type", cart.idType);
+                        if (item.id === cart.id && item.idType === cart.idType) {
                             item.quantity += Number(cart.quantity);
                             await user.save();
                             return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
@@ -287,7 +293,7 @@ exports.addCart = async (req, res) => {
                 user.carts.push(cart);
                 await user.save();
 
-                return res.status(200).json({ message: "OK", success: true, user: data, description: "ADD CART ITEM SUCCESS" });
+                return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
             })
             .catch((err) => {
                 console.log(err);
