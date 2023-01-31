@@ -254,6 +254,7 @@ exports.changePassword = async (req, res) => {
 
 exports.updateInfo = async (req, res) => {
   const { province, district, ward, addressDetail } = req.body;
+
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.id },
