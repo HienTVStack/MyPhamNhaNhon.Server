@@ -273,36 +273,29 @@ exports.addCart = async (req, res) => {
   const { id } = req.params;
   const cart = req.body;
 
-  console.log(cart);
-
   try {
     await User.findOne({ _id: id })
       .then(async (user) => {
         if (user?.carts?.length !== 0) {
           for (let item of user.carts) {
-            console.log("item.id", item.id);
-            console.log("cart.id", cart.id);
-            console.log("item.type", item.idType);
-            console.log("cart.type", cart.idType);
             if (item.id === cart.id && item.idType === cart.idType) {
               item.quantity += Number(cart.quantity);
-              await user.save();
-              return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
+              const tmp = await user.save();
+              return res.status(200).json({ success: true, data: { message: "Thêm vào giỏ hàng thành công", user: tmp } });
             }
           }
         }
         user.carts.push(cart);
-        await user.save();
-
-        return res.status(200).json({ message: "OK", success: true, description: "ADD CART ITEM SUCCESS" });
+        const tmp = await user.save();
+        return res.status(200).json({ success: true, data: { message: "Thêm vào giỏ hàng thành công", user: tmp } });
       })
       .catch((err) => {
-        console.log(err);
-        return res.status(404).json({ message: "FAIL", success: false, description: "ADD CART ITEM FALI" });
+        console.error(err);
+        return res.status(404).json({ success: false, data: { message: err } });
       });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: "FAIL", success: false, description: "ADD CART ITEM FALI" });
+    console.error(error);
+    return res.status(404).json({ success: false, data: { message: error } });
   }
 };
 
@@ -310,10 +303,11 @@ exports.removedCartItem = async (req, res) => {
   const { id } = req.params;
   try {
     const auth = await User.findOneAndUpdate({ _id: id }, { $pull: { carts: { _id: req.body.id } } });
-    res.status(200).json({ message: "OK", success: true, description: "REMOVED CART ITEM SUCCESS" });
+    const tmpAuth = await User.findOne({ _id: id });
+    res.status(200).json({ success: true, data: { message: "Loại bỏ sản phẩm khỏi giỏ hàng thành công", user: tmpAuth } });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: "FAIL", success: false, description: "REMOVED CART ITEM FAILED" });
+    console.error(error);
+    res.status(404).json({ success: false, data: { message: "Loại bỏ sản phẩm khỏi giỏ hàng thất bại" } });
   }
 };
 
