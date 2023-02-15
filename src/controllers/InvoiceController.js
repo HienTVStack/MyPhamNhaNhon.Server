@@ -66,12 +66,21 @@ exports.create = async (req, res) => {
   try {
     // Kiểm tra số lượng tồn
     for (const product of products) {
+      // console.log("🚀 ~ file: InvoiceController.js:69 ~ exports.create= ~ product", product)
       const tmpProduct = await Product.findOne({ _id: product.id });
       const { type } = tmpProduct;
-      if (product.quantity >= type.quantityStock) {
-        //Nếu có một sản phẩm có số lượng mua nhiều hơn số lượng tồn.
-        return res.status(404).json({ success: false, message: "Không đủ hàng trong kho" });
+      for(const typeItem of type) {
+        if(typeItem.quantityStock < product.quantity) {
+          //Nếu có một sản phẩm có số lượng mua nhiều hơn số lượng tồn.
+          return res.status(404).json({ success: false, message: "Không đủ hàng trong kho" });
+        }
       }
+      // console.log("🚀 ~ file: InvoiceController.js:71 ~ exports.create= ~ type", type)
+      // if (!(product.quantity > type.quantityStock)) {
+      //   console.log("🚀 ~ file: InvoiceController.js:72 ~ exports.create= ~ type.quantityStock", type.quantityStock)
+      //   console.log("🚀 ~ file: InvoiceController.js:72 ~ exports.create= ~ product.quantity", product.quantity)
+       
+      // }
     }
     //
     const invoiceCreate = await Invoice.create(req.body);
